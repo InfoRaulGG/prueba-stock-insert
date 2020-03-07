@@ -66,7 +66,7 @@ namespace InsertStock
             catch (Exception ex)
             {
                 Console.Clear();
-                Console.WriteLine(ex);
+                Console.Write(ex);
             }
         }
     }

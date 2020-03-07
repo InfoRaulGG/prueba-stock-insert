@@ -35,9 +35,9 @@ namespace InsertStock.Services
 				}
 
 			}
-			catch (Exception)
+			catch (Exception ex)
 			{
-				throw;
+				throw ex;
 			}
         }
     }
