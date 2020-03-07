@@ -18,6 +18,7 @@ namespace InsertStock
             builder.RegisterType<ConfigurationService>().AsSelf();
             builder.RegisterType<InventoryContext>().AsSelf();
             builder.RegisterType<Logger<string>>().As<ILogger>();
+            builder.RegisterType<CsvService>().AsSelf();
 
 
             return builder.Build();
