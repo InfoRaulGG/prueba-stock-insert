@@ -14,6 +14,7 @@ namespace InsertStock.Mappers
             Map(m => m.ProductCode).Name("Product");
             Map(m => m.CreateDate).Name("Date");
             Map(m => m.Stock).Name("Stock");
+            
         }
     }
 }
