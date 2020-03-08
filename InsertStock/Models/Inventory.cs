@@ -20,6 +20,7 @@ namespace InsertStock.Models
         public string ProductCode { get; set; }
         [Required]
         [DataType(DataType.Date)]
+        [MaxLength(12)]
         public string CreateDate { get; set; }
         [Required]
         [MaxLength(30)]

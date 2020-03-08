@@ -31,7 +31,7 @@ namespace InsertStock
                 db.Database.Migrate();
                 Console.Clear();
 
-                ProcesarFicheroCSVRemoto();
+                ActualizarStock();
 
 
             }
@@ -42,7 +42,7 @@ namespace InsertStock
             }
         }
 
-        private static void ProcesarFicheroCSVRemoto()
+        private static void ActualizarStock()
         {
             DateTime Fechainicio = DateTime.Now;
             TimeSpan ts = new TimeSpan();

@@ -29,18 +29,26 @@ namespace InsertStock.Services
 
                 var client = new WebClient();
                 double megabytes;
-                //using (TextReader fileReader = new StreamReader(File.OpenRead("C:\\Pruebas\\Stock.csv")))
+
                 using (TextReader fileReader = new StreamReader(client.OpenRead(path)))
                 {
                     megabytes = (Convert.ToDouble(client.ResponseHeaders["Content-Length"]) / 1024) / 1024; 
                     CsvConfiguration configuration = new CsvConfiguration(CultureInfo.InvariantCulture);
+                    configuration.BadDataFound = x => { Console.WriteLine(x); };
                     var csv = new CsvReader(fileReader, configuration);
                     csv.Configuration.RegisterClassMap<InventoryMapper>();
                     csv.Configuration.Delimiter = ";";
-                    csv.Read();
-                    csv.ReadHeader();
+                    bool headers = false;
+                    while (csv.Read())
+                    {
+                        if (!headers)
+                        {
+                            csv.ReadHeader();
+                            headers = true;
+                        }
 
-                    inventory = csv.GetRecords<Inventory>().ToList();
+                         inventory = csv.GetRecords<Inventory>().ToList();
+                    }
                     csv.Dispose();
                 }
                 ts = DateTime.Now - horaInicioDescarga;
