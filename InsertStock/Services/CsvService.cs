@@ -38,17 +38,12 @@ namespace InsertStock.Services
                     var csv = new CsvReader(fileReader, configuration);
                     csv.Configuration.RegisterClassMap<InventoryMapper>();
                     csv.Configuration.Delimiter = ";";
-                    bool headers = false;
-                    while (csv.Read())
-                    {
-                        if (!headers)
-                        {
-                            csv.ReadHeader();
-                            headers = true;
-                        }
 
-                         inventory = csv.GetRecords<Inventory>().ToList();
-                    }
+                    csv.Read();
+                    csv.ReadHeader();
+
+                    inventory = csv.GetRecords<Inventory>().ToList();
+                    
                     csv.Dispose();
                 }
                 ts = DateTime.Now - horaInicioDescarga;

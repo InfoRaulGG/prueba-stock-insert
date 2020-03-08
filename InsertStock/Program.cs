@@ -33,7 +33,7 @@ namespace InsertStock
 
                 ActualizarStock();
 
-
+                Console.WriteLine("FIN DE LA EJECUCIÓN... ");
             }
             catch (Exception ex)
             {
@@ -44,41 +44,52 @@ namespace InsertStock
 
         private static void ActualizarStock()
         {
-            DateTime Fechainicio = DateTime.Now;
-            TimeSpan ts = new TimeSpan();
-
-            Console.WriteLine("INICIO PROCESADO FICHERO CSV REMOTO ::: HORA DE EJECUCION " + Fechainicio);
-
-            string path = config.GetConfigurationSetting("UrlDescargaStock");
-
-            Console.WriteLine("Descargar información de fichero remoto; " + path);
-            Console.WriteLine("\n- LEYENDO DATOS");
-            var inventario = csvRead.ReadCsvInventoryFile(path);
-
-            if (inventario != null && inventario.Count > 0)
+            try
             {
-                ts = DateTime.Now - Fechainicio;
-                Console.WriteLine("- DATOS CARGADOS :: Tiempo de ejecución del programa: " + ts.Minutes + " minutos");
 
-                if (db.Inventory.Any())
+                DateTime Fechainicio = DateTime.Now;
+                TimeSpan ts = new TimeSpan();
+
+                Console.WriteLine("INICIO PROCESADO FICHERO CSV REMOTO ::: HORA DE EJECUCION " + Fechainicio);
+
+                string path = config.GetConfigurationSetting("UrlDescargaStock");
+
+                Console.WriteLine("Descargar información de fichero remoto; " + path);
+                Console.WriteLine("\n- LEYENDO DATOS");
+                var inventario = csvRead.ReadCsvInventoryFile(path);
+
+                if (inventario != null && inventario.Count > 0)
                 {
-                    Console.WriteLine("ELIMINANDO DATOS DE ANTERIOR IMPORTACION...");
-                    //db.BulkDelete(inventario);
-                    db.Database.EnsureDeleted();
-                    db.Database.Migrate();
                     ts = DateTime.Now - Fechainicio;
-                    Console.WriteLine("- DATOS BORRADOS :: Tiempo de ejecución del programa: " + ts.Minutes + " minutos");
-                }
+                    Console.WriteLine("- DATOS CARGADOS :: Tiempo de ejecución del programa: " + ts.Minutes + " minutos");
 
-                Console.WriteLine("- INSERTANDO DATOS, TOTAL DE REGISTROS::: " + inventario.Count);
-                db.BulkInsert(inventario);
-                ts = DateTime.Now - Fechainicio;
-                Console.WriteLine("##############################################################################################################");
-                Console.WriteLine("\n PROCESO TERMINADO CON EXITO DATOS INSERTADOS :: Tiempo de ejecución del programa: " + ts.Minutes + " minutos");
+                    if (db.Inventory.Any())
+                    {
+                        Console.WriteLine("ELIMINANDO DATOS DE ANTERIOR IMPORTACION...");
+
+                        db.Database.EnsureDeleted();
+                        db.Database.Migrate();
+
+                        ts = DateTime.Now - Fechainicio;
+                        Console.WriteLine("- DATOS BORRADOS :: Tiempo de ejecución del programa: " + ts.Minutes + " minutos");
+                    }
+
+                    Console.WriteLine("- INSERTANDO DATOS, TOTAL DE REGISTROS::: " + inventario.Count);
+
+                    db.BulkInsert(inventario);
+
+                    ts = DateTime.Now - Fechainicio;
+                    Console.WriteLine("##############################################################################################################");
+                    Console.WriteLine("\n PROCESO TERMINADO CON EXITO DATOS INSERTADOS :: Tiempo de ejecución del programa: " + ts.Minutes + " minutos");
+                }
+                else
+                {
+                    Console.WriteLine("No existen los datos buscados en el fichero");
+                }
             }
-            else
+            catch (Exception ex)
             {
-                Console.WriteLine("No existen los datos buscados en el fichero");
+                throw ex;
             }
         }
     }
